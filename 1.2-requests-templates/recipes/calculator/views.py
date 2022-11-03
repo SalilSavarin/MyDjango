@@ -60,17 +60,29 @@ def make_omlet(request):
     return HttpResponse(str_for_http_response)
 
 def make_pasta(request):
-    print(DATA['pasta'])
     ingredient_list = list()
-    for ingredient in DATA['pasta'].items():
-        print(ingredient)
+    str_for_http_response = str()
+    ammount_str = request.GET.get("servings")
+    servings = 1
+    if ammount_str != None:
+        servings = int(ammount_str)
+
+    for ingredient, amount in DATA['pasta'].items():
         ingredient_list.append(ingredient)
-    return HttpResponse(ingredient_list)
+        str_for_http_response += f'{ingredient} : {str(amount * servings )} '
+    print(request.GET.get("servings"))
+    return HttpResponse(str_for_http_response)
 
 def make_buter(request):
-    print(DATA['buter'])
     ingredient_list = list()
-    for ingredient in DATA['buter'].items():
-        print(ingredient)
+    str_for_http_response = str()
+    ammount_str = request.GET.get("servings")
+    servings = 1
+    if ammount_str != None:
+        servings = int(ammount_str)
+
+    for ingredient, amount in DATA['buter'].items():
         ingredient_list.append(ingredient)
-    return HttpResponse(ingredient_list)
+        str_for_http_response += f'{ingredient} : {str(amount * servings )} '
+    print(request.GET.get("servings"))
+    return HttpResponse(str_for_http_response)

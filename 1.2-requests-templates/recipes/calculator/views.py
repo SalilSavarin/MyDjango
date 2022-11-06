@@ -1,5 +1,5 @@
-from django.shortcuts import render, reverse
-from django.http import HttpResponse
+from django.shortcuts import render
+
 
 DATA = {
     'omlet': {
@@ -20,6 +20,7 @@ DATA = {
     # можете добавить свои рецепты ;)
 }
 
+
 # Напишите ваш обработчик. Используйте DATA как источник данных
 # Результат - render(request, 'calculator/index.html', context)
 # В качестве контекста должен быть передан словарь с рецептом:
@@ -29,48 +30,38 @@ DATA = {
 #     'ингредиент2': количество2,
 #   }
 # }
-def home_views(request):
-    template_name = 'calculator/index.html'
-    pages = {
-        'Главная страница': reverse('home'),
-        'Блюдо 1': reverse('omlet'),
-        'Блюдо 2': reverse('pasta'),
-        'Блюдо 3': reverse('buter'),
-    }
+def home(request):
+    return render(request, 'calculator/index.html')
 
-    # context и параметры render менять не нужно
-    # подбробнее о них мы поговорим на следующих лекциях
-    context = {
-        'pages': pages
-    }
-    return render(request, template_name, context)
 
 def make_omlet(request):
-    ingredient_list = list()
-    str_for_http_response = str()
-    ammount_str = request.GET.get("servings")
-    servings = 1
-    if ammount_str != None:
-        servings = int(ammount_str)
+    context = {
+        'recipe': DATA['omlet']
+    }
+    amount_str = request.GET.get("servings")
+    if amount_str:
+        context['recipe'] = {key: values * int(amount_str) for key, values in context['recipe'].items()}
 
-    for ingredient, amount in DATA['omlet'].items():
-        ingredient_list.append(ingredient)
-        str_for_http_response += f'{ingredient} : {str(amount * servings )} '
-    print(request.GET.get("servings"))
-    return HttpResponse(str_for_http_response)
+    return render(request, 'calculator/index.html', context)
+
 
 def make_pasta(request):
-    print(DATA['pasta'])
-    ingredient_list = list()
-    for ingredient in DATA['pasta'].items():
-        print(ingredient)
-        ingredient_list.append(ingredient)
-    return HttpResponse(ingredient_list)
+    context = {
+        'recipe': DATA['pasta']
+    }
+    amount_str = request.GET.get("servings")
+    if amount_str is not None:
+        context['recipe'] = {key: values * int(amount_str) for key, values in context['recipe'].items()}
+
+    return render(request, 'calculator/index.html', context)
+
 
 def make_buter(request):
-    print(DATA['buter'])
-    ingredient_list = list()
-    for ingredient in DATA['buter'].items():
-        print(ingredient)
-        ingredient_list.append(ingredient)
-    return HttpResponse(ingredient_list)
+    context = {
+        'recipe': DATA['buter']
+    }
+    amount_str = request.GET.get("servings")
+    if amount_str is not None:
+        context['recipe'] = {key: values * int(amount_str) for key, values in context['recipe'].items()}
+
+    return render(request, 'calculator/index.html', context)

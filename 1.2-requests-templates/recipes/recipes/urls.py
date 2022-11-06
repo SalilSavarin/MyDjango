@@ -20,7 +20,7 @@ from calculator.views import *
 
 
 urlpatterns = [
-    path('', home, name='home'),
+    path('', home_views, name='home'),
     path('dish_1/', make_omlet, name='omlet'),
     path('dish_2/', make_pasta, name='pasta'),
     path('dish_3/', make_buter, name='buter'),

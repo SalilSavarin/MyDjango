@@ -72,10 +72,8 @@ WSGI_APPLICATION = 'website.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'netology_orm_migrations',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR + '/my_db.sqlite3',
     }
 }
 
@@ -131,3 +129,4 @@ try:
 except ImportError:
     pass
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

@@ -1,20 +1,30 @@
 from rest_framework import serializers
 
+from .models import Product, Stock, StockProduct
+
 
 class ProductSerializer(serializers.ModelSerializer):
     # настройте сериализатор для продукта
-    pass
+    class Meta:
+        model = Product
+        fields = '__all__'
 
 
 class ProductPositionSerializer(serializers.ModelSerializer):
     # настройте сериализатор для позиции продукта на складе
-    pass
+    class Meta:
+        model = StockProduct
+        fields = '__all__'
 
 
 class StockSerializer(serializers.ModelSerializer):
     positions = ProductPositionSerializer(many=True)
 
     # настройте сериализатор для склада
+    class Meta:
+        model = Stock
+        fields = ['id', 'positions', 'address']
+
 
     def create(self, validated_data):
         # достаем связанные данные для других таблиц
@@ -35,6 +45,14 @@ class StockSerializer(serializers.ModelSerializer):
 
         # обновляем склад по его параметрам
         stock = super().update(instance, validated_data)
+        print(instance)
+        for position in positions:
+            stock = position.get('stock')
+            new_object = StockProduct.objects.get(stock=stock, product=position.get('product'))
+            new_object.price = position.get('price')
+            new_object.quantity = position.get('quantity')
+            new_object.save()
+
 
         # здесь вам надо обновить связанные таблицы
         # в нашем случае: таблицу StockProduct
